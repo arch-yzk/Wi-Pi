@@ -468,18 +468,26 @@ exit
 </code></pre></div>
 <h3 id="_2">説明</h3>
 <ul>
-<li>natテーブル
-    &gt; <code>-A POSTROUTING -o eth0 -j MASQUERADE</code>
-    &gt; 「iptablesの最後に行われる」ネットワークの処理が<code>POSTROUTING</code>チェイン。<code>-o eth0</code>で送信元インターフェースを指定し、<code>-j MASQUERADE</code>でIPマスカレードを有効にしている(2つの無線回線用)。</li>
-<li>filterテーブル
-    &gt; <code>-A FORWARD -s 192.168.100.128/25 -o eth0 -j DROP</code>
-    &gt; <code>FORWARD</code>チェインはネットワークの経路断定に使用されるものの1つ。<code>-s &lt;ip address/netmask&gt;</code>で送信元<strong>アドレス</strong>範囲を指定し、<code>-o eth0 -j DROP</code>で「eth0」から送信するパケットをドロップする。
-    &gt; &gt; つまり「192.168.100.128/25」のIPアドレステーブルはパケットを外部に送信できない。</li>
-<li>mangleテーブル
-    &gt; <code>-A PREROUTING -s 192.168.100.0/25 -d 192.168.100.128/25 -j NETMAP --to 192.168.100.128/25</code>
-    &gt; そもそもmangleテーブルはTOS(Type of Service)を設定するために使用するため、厳密には使用するテーブルは違う。推奨ではない
-    &gt; <code>PREROUTING</code>で「iptablesの最初に行われる処理」を指定する。
-    &gt; <code>-s 192.168.100.0/25 -d 192.168.100.128/25</code>では前半が送信元、後半が送信先のパケットを指定している。<code>-j NETMAP --to 192.168.100.128/25</code>を指定することで<code>filter</code>テーブルで指定したフィルタを無視して無線回線を相互接続させることが出来る。</li>
+<li>natテーブル<blockquote>
+<p><code>-A POSTROUTING -o eth0 -j MASQUERADE</code>  </p>
+<p>「iptablesの最後に行われる」ネットワークの処理が<code>POSTROUTING</code>チェイン。<code>-o eth0</code>で送信元インターフェースを指定し、<code>-j MASQUERADE</code>でIPマスカレードを有効にしている(2つの無線回線用)。</p>
+</blockquote>
+</li>
+<li>filterテーブル<blockquote>
+<p><code>-A FORWARD -s 192.168.100.128/25 -o eth0 -j DROP</code>  </p>
+<p><code>FORWARD</code>チェインはネットワークの経路断定に使用されるものの1つ。<code>-s &lt;ip address/netmask&gt;</code>で送信元<strong>アドレス</strong>範囲を指定し、<code>-o eth0 -j DROP</code>で「eth0」から送信するパケットをドロップする。</p>
+<blockquote>
+<p>つまり「192.168.100.128/25」のIPアドレステーブルはパケットを外部に送信できない。</p>
+</blockquote>
+</blockquote>
+</li>
+<li>mangleテーブル<blockquote>
+<p><code>-A PREROUTING -s 192.168.100.0/25 -d 192.168.100.128/25 -j NETMAP --to 192.168.100.128/25</code>  </p>
+<p>そもそもmangleテーブルはTOS(Type of Service)を設定するために使用するため、厳密には使用するテーブルは違う。推奨ではない。<br />
+<code>PREROUTING</code>で「iptablesの最初に行われる処理」を指定する。
+<code>-s 192.168.100.0/25 -d 192.168.100.128/25</code>では前半が送信元、後半が送信先のパケットを指定している。<code>-j NETMAP --to 192.168.100.128/25</code>を指定することで<code>filter</code>テーブルで指定したフィルタを無視して無線回線を相互接続させることが出来る。</p>
+</blockquote>
+</li>
 </ul>
                 
               
